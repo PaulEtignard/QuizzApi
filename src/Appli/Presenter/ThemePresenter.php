@@ -12,32 +12,37 @@ class ThemePresenter implements OutputBoundary
 {
     private SerializerInterface $serializer;
 
-    public function error():Response
+    private response $response;
+
+    public function __construct(SerializerInterface $serializer)
+    {
+        $this->serializer = $serializer;
+    }
+
+    public function error($message):void
     {
         $response = new Response();
         $response->setStatusCode(Response::HTTP_BAD_REQUEST);
+        $response->setContent($message);
         $response->headers->set("content-type", "application/json");
-        return $response;
-
+        $this->response = $response;
     }
 
-    public function success():Response
+    public function success($themes):void
     {
-        $response = new Response();
-        $response->setStatusCode(Response::HTTP_OK);
-        $response->headers->set("content-type", "application/json");
-        return $response;
-    }
-
-
-
-    public function getJsonTheme($themes, SerializerInterface $serializer):Response{
-
-        $themeJson = $serializer->serialize($themes,"json",["groups"=>["theme"]]);
+        $themeJson = $this->serializer->serialize($themes,"json",["groups"=>["theme"]]);
         $response = new Response();
         $response->setStatusCode(Response::HTTP_OK);
         $response->headers->set("content-type","application/json");
         $response->setContent($themeJson);
-        return $response;
+        $this->response = $response;
     }
+
+    public function getResponse(): Response
+    {
+        return $this->response;
+    }
+
+
+
 }

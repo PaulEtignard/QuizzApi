@@ -22,9 +22,11 @@ class ApiController extends AbstractController
     private ThemePresenter $ThemePresenter;
     private ThemeRepository $themeRepository;
     #[Route('/api/themes', name: 'app_api_themes')]
-    public function GetAllthemes(DataAccess $dataAccess, OutputBoundary $outputBoundary, SerializerInterface $serializer): Response
+    public function GetAllthemes(DataAccess $dataAccess, SerializerInterface $serializer): Response
     {
-        $themeInteractor = new ThemeInteractor($dataAccess,$outputBoundary,$serializer);
-        return $themeInteractor->execute();
+        $presenter = new ThemePresenter($serializer);
+        $themeInteractor = new ThemeInteractor($dataAccess, $presenter);
+        $themeInteractor->execute();
+        return $presenter->getResponse();
     }
 }

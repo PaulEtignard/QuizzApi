@@ -5,9 +5,6 @@ use App\Core\Interface\DataAccessInterface;
 use App\Repository\ThemeRepository;
 class DataAccess implements DataAccessInterface
 {
-
-
-
     private ThemeRepository $repository;
 
     /**
@@ -17,8 +14,6 @@ class DataAccess implements DataAccessInterface
     {
         $this->repository = $repository;
     }
-
-
     function getAllThemes(): array
     {
         return $this->repository->findAll();
